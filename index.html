@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mark Meeuwenoord — a myriad of things</title>
+
+    <!-- Plus Jakarta Sans font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #efefef;
+        --fg: #0c0c0c;
+        --accent: #0c0c0c;
+        --border: 3px;
+        --radius-pill: 9999px;
+        --radius-rect: 8px;
+        --maxw: 980px;
+        --font: "Plus Jakarta Sans", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: var(--font);
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        color: var(--fg);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      .page {
+        position: relative;
+        max-width: var(--maxw);
+        padding: clamp(16px, 3vw, 40px);
+        margin-left: clamp(16px, 3vw, 40px);
+        margin-right: auto;
+      }
+
+      p {
+        font-weight: 300;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        font-size: clamp(28px, 4.2vw + 6px, 62px);
+        margin: 0 0 1.2em;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5ch;
+        border-radius: var(--radius-pill);
+        padding: 0.1em 0.5em 0.2em;
+        line-height: 1;
+        transform: translateY(0.02em);
+        position: relative;
+        white-space: nowrap;
+        user-select: none;
+        transition: border-color 0.2s ease, opacity 0.2s ease;
+        border: var(--border) solid transparent; /* standaard onzichtbaar */
+        opacity: 0.6;
+      }
+
+      /* Border zichtbaar bij hover/focus */
+      .pill.hovered {
+        border-color: var(--accent);
+        opacity: 1;
+      }
+
+      .pill b {
+        font-weight: 800;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        border: var(--border) solid var(--accent);
+        border-radius: var(--radius-rect);
+        padding: 0.08em 0.4em 0.18em;
+        line-height: 1;
+        transform: translateY(0.02em);
+        position: relative;
+        white-space: nowrap;
+        user-select: none;
+        font-weight: 800;
+      }
+
+      .pill .port {
+        width: 0.2em;
+        height: 0.2em;
+        border: var(--border) solid var(--accent);
+        border-radius: 50%;
+        background: var(--bg);
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        opacity: 0; /* standaard onzichtbaar */
+        transition: opacity 0.2s ease;
+      }
+
+      /* Poorten verschijnen bij hover/focus */
+      .pill.hovered .port {
+        opacity: 1;
+      }
+
+      .pill .port.input {
+        left: -0.15em;
+      }
+      .pill .port.output {
+        right: -0.15em;
+      }
+
+      .top-right {
+        position: fixed;
+        right: clamp(16px, 3vw, 40px);
+        top: clamp(16px, 2.2vw, 32px);
+        font-size: clamp(20px, 3vw, 46px);
+        font-weight: 800;
+        z-index: 2;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem 3rem;
+        margin-top: 3rem;
+        font-size: clamp(16px, 1.2vw + 10px, 22px);
+        line-height: 1.35;
+        font-weight: 500;
+      }
+      .meta h3 {
+        font-weight: 700;
+        font-size: 0.9em;
+        margin: 0 0 0.6rem;
+        opacity: 0.8;
+      }
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem 0.8rem;
+        margin-top: 2.2rem;
+      }
+      .link-pill {
+        font-size: clamp(18px, 2.1vw, 36px);
+        font-weight: 800;
+        text-decoration: none;
+        color: var(--fg);
+        border: var(--border) solid var(--accent);
+        border-radius: var(--radius-pill);
+        padding: 0.25em 0.6em 0.35em;
+      }
+
+      svg#cables {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .page,
+      .pill,
+      .tag,
+      .meta,
+      .links {
+        position: relative;
+        z-index: 1;
+      }
+
+      .cable {
+        fill: none;
+        stroke: var(--fg);
+        stroke-width: 4;
+        stroke-linecap: round;
+      }
+      .cable-shadow {
+        fill: none;
+        stroke: white;
+        stroke-width: 8;
+        stroke-linecap: round;
+        opacity: 0.6;
+        filter: blur(1px);
+      }
+
+      @media (max-width: 640px) {
+        .meta {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg id="cables" aria-hidden="true"></svg>
+
+    <div class="top-right">
+      <span class="pill" data-id="myriad">
+        <b>mmmmmmm</b>
+      </span>
+    </div>
+
+    <div class="page" id="page">
+      <p>
+        <span class="tag" data-id="name"><b>Mark Meeuwenoord</b></span>
+        is a media artist, musician and coder who navigates in the intersection
+        of human precence and technology.
+      </p>
+
+      <p>
+        Currently researching
+        <span class="pill" data-id="artificial-kinship">
+          <b>Artifical Kinship</b>
+          <span class="port output" aria-hidden="true"></span>
+        </span>
+        in colab with iii, cz, breda Robotics & Avans Hogeschool of Applied &
+        Sciences
+        <span class="pill" data-id="polymorf">
+          <span class="port input" aria-hidden="true"></span>
+          <b>polymorf</b> </span
+        >.
+      </p>
+
+      <div class="meta">
+        <div>
+          <h3>Stuff i'm working on</h3>
+          <div>Future Botanica</div>
+          <div>RoboRobo SongSong</div>
+          <div>i believe in my mess</div>
+        </div>
+        <div>
+          <h3>Research & Teaching</h3>
+          <div>CARADT</div>
+          <div>Robot Lab @CMD BREDA</div>
+        </div>
+      </div>
+
+      <div class="links">
+        <a class="link-pill" href="#" aria-label="Instagram">Instagram</a>
+        <a class="link-pill" href="#" aria-label="Are.na">Are.na</a>
+        <a class="link-pill" href="#" aria-label="LinkedIn">LinkedIn</a>
+        <a class="link-pill" href="mailto:hello@example.com" aria-label="Email"
+          >Email</a
+        >
+      </div>
+    </div>
+
+    <script>
+      const connections = [{ from: "artificial-kinship", to: "polymorf" }];
+
+      const cableSVG = document.getElementById("cables");
+      let activeId = null;
+
+      function clearCables() {
+        cableSVG.innerHTML = "";
+      }
+
+      function getPortCenter(el, type) {
+        const port = el.querySelector(`.port.${type}`);
+        if (!port) return null;
+        const rect = port.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      }
+
+      function makePathD(p1, p2) {
+        const dx = Math.abs(p2.x - p1.x);
+        const c = Math.max(60, dx * 0.5);
+        return `M ${p1.x} ${p1.y} C ${p1.x + c} ${p1.y}, ${p2.x - c} ${p2.y}, ${
+          p2.x
+        } ${p2.y}`;
+      }
+
+      function drawFor(active) {
+        clearCables();
+        document
+          .querySelectorAll(".pill")
+          .forEach((p) => p.classList.remove("hovered"));
+        if (!active) return;
+
+        const NS = "http://www.w3.org/2000/svg";
+        const involved = [];
+
+        connections
+          .filter((link) => link.from === active || link.to === active)
+          .forEach((link) => {
+            const from = document.querySelector(
+              `.pill[data-id="${link.from}"]`
+            );
+            const to = document.querySelector(`.pill[data-id="${link.to}"]`);
+            if (!from || !to) return;
+            involved.push(from, to);
+
+            const p1 = getPortCenter(from, "output");
+            const p2 = getPortCenter(to, "input");
+            if (!p1 || !p2) return;
+
+            const d = makePathD(p1, p2);
+
+            const shadow = document.createElementNS(NS, "path");
+            shadow.setAttribute("d", d);
+            shadow.setAttribute("class", "cable-shadow");
+
+            const cable = document.createElementNS(NS, "path");
+            cable.setAttribute("d", d);
+            cable.setAttribute("class", "cable");
+
+            cableSVG.appendChild(shadow);
+            cableSVG.appendChild(cable);
+          });
+
+        // Markeer betrokken pills
+        involved.forEach((el) => el.classList.add("hovered"));
+      }
+
+      function redraw() {
+        drawFor(activeId);
+      }
+
+      const ro = new ResizeObserver(redraw);
+      document.querySelectorAll(".pill, .page").forEach((el) => ro.observe(el));
+      window.addEventListener("resize", redraw, { passive: true });
+      window.addEventListener("scroll", redraw, { passive: true });
+
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => requestAnimationFrame(redraw));
+      } else {
+        window.addEventListener("load", redraw);
+      }
+
+      const connectedIds = new Set(connections.flatMap((c) => [c.from, c.to]));
+      connectedIds.forEach((id) => {
+        const el = document.querySelector(`.pill[data-id="${id}"]`);
+        if (!el) return;
+        el.setAttribute("tabindex", "0");
+        el.addEventListener("mouseenter", () => {
+          activeId = id;
+          drawFor(id);
+        });
+        el.addEventListener("mouseleave", () => {
+          activeId = null;
+          drawFor(null);
+        });
+        el.addEventListener("focus", () => {
+          activeId = id;
+          drawFor(id);
+        });
+        el.addEventListener("blur", () => {
+          activeId = null;
+          drawFor(null);
+        });
+        el.addEventListener(
+          "touchstart",
+          () => {
+            activeId = id;
+            drawFor(id);
+          },
+          { passive: true }
+        );
+      });
+
+      document.addEventListener(
+        "touchstart",
+        (e) => {
+          const pill = e.target.closest(".pill");
+          if (!pill || !connectedIds.has(pill?.dataset.id)) {
+            activeId = null;
+            drawFor(null);
+          }
+        },
+        { passive: true }
+      );
+
+      clearCables();
+    </script>
+  </body>
+</html>
