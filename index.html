@@ -174,8 +174,31 @@
         pointer-events: none;
         z-index: 0;
       }
+      /* unvisited link */
+      a:link {
+        color: black;
+      }
 
-      .page,
+      /* visited link */
+      a:visited {
+        color: black;
+      }
+
+      /* mouse over link */
+      a:hover {
+        color: black;
+      }
+
+      /* selected link */
+      a:active {
+        color: black;
+      }
+      /* underline link */
+      a:link {
+        text-decoration: none;
+      }
+
+      ` .page,
       .pill,
       .tag,
       .meta,
@@ -217,9 +240,9 @@
 
     <div class="page" id="page">
       <p>
-        <span class="tag" data-id="name"><b>Mark Meeuwenoord</b></span>
-        is a media artist, musician, and coder exploring the relational dynamics
-        between human embodiment and technology.
+        <span class="tag" data-id="name"><b>mmmmmmmmm</b></span>
+        is a media artist, musician, and researcher exploring the relational
+        dynamics between humans and machines.
       </p>
 
       <p>
@@ -233,7 +256,7 @@
           data-id="polymorf"
         >
           <span class="port input" aria-hidden="true"></span>
-          <b>polymorf</b> </span
+          <b><a href="https://www.polymorf.nl">Polymorf</a></b> </span
         >.
       </p>
 
